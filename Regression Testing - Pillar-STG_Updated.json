@@ -1,0 +1,2774 @@
+{
+	"info": {
+		"_postman_id": "1bba54e6-26ff-46dc-adc7-9bb714a0884e",
+		"name": "Regression Testing - Pillar-STG",
+		"description": "# About this collection\n\nThis collection helps ensure your API continues to work as expected after updates or changes. It contains sample requests for a series of tests that validate different aspects of an API, including:\n\n1. **Status code verification:** We'll check if the API returns the expected status codes for various requests, ensuring reliability and proper error handling.\n2. **JSON schema verification:** We'll make sure the JSON response conforms to a specified JSON Schema, ensuring API contracts are honored.\n3. **Response time verification:** We'll verify that the API's response time is within the acceptable range, providing a smooth user experience and optimizing performance.\n4. **Response body verification:** We'll validate the structure and content of the response body for accuracy, ensuring the integrity of the data and preventing potential issues downstream.\n5. **Header verification:** We'll confirm the presence and correct values of specific headers in the response, enabling secure and well-structured communication between your app and its users.\n    \n\n## **Using this collection**\n\n**Step 1:** Send the sample requests and view the response and test results.\n\n**Step 2:** Replace the sample request URLs with your desired API endpoints.\n\n**Step 3:** Customize the tests in the \"Tests\" tab if needed. Don't forget to save your changes.\n\n**Step 4:** Run the collection by selecting \"Run\".\n\n### Resources\n\n[Scripting in Postman](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)\n\n[Test script examples](https://learning.postman.com/docs/writing-scripts/script-references/test-examples/)\n\n[Postman Sandbox API reference](https://learning.postman.com/docs/sending-requests/grpc/postman-sandbox-api/#writing-assertions)\n\n[Using the Collection Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18532405",
+		"_collection_link": "https://dark-water-101131.postman.co/workspace/pillar_readiness_app~18581b51-e43f-4d60-9ba6-0dcfd17bbf3f/collection/18532405-1bba54e6-26ff-46dc-adc7-9bb714a0884e?action=share&source=collection_link&creator=18532405"
+	},
+	"item": [
+		{
+			"name": "USER REGISTERED - Old User",
+			"item": [
+				{
+					"name": "Sign In",
+					"item": [
+						{
+							"name": "Verify User Email Status >> auth/email-status",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"registeredPlanUser\", \"z3@yopmail.com\");"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+											"});",
+											"",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+											"     pm.response.to.be.ok;",
+											"     pm.response.to.be.withBody;",
+											"     pm.response.to.be.json;",
+											"});",
+											"",
+											"const jsonData = pm.response.json();",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+											"    pm.expect(jsonData.error).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"TC0005 -> Verify Response Data\", function () {",
+											"    pm.expect(jsonData.message).to.eql(\"\");",
+											"    pm.expect(jsonData.data.is_email_verified).to.eql(true);",
+											"    pm.expect(jsonData.data.is_registered).to.eql(true);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{registeredPlanUser}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}{{daroanApi}}{{apiV1}}/auth/email-status",
+									"host": [
+										"{{baseUrl}}{{daroanApi}}{{apiV1}}"
+									],
+									"path": [
+										"auth",
+										"email-status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify User Login Successfully >> auth/login",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"registeredPlanUserPass\", \"12345678\");",
+											"pm.environment.set(\"promoCode\", \"\");"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+											"});",
+											"",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+											"     pm.response.to.be.ok;",
+											"     pm.response.to.be.withBody;",
+											"     pm.response.to.be.json;",
+											"});",
+											"",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"TC0005 -> Verify message\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"User info returned successfully\");",
+											"});",
+											"",
+											"pm.test(\"TC0006 -> Verify access level\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.data.access_level).to.eql(\"HOME\");",
+											"});",
+											"",
+											"// ***=== Need to use this User for the furhter Request ===****  ",
+											"",
+											"if (responseCode.code == 200) {",
+											"",
+											"    pm.test(\"TC0007 -> Set access token \", function() {",
+											"        var jsonData = JSON.parse(responseBody);",
+											"        var token = jsonData.data.access_jwt_token;",
+											"        pm.environment.set(\"accessToken\", token);",
+											"    });",
+											"",
+											"     pm.test(\"TC0008 -> Set athlete Id \", function() {",
+											"        var jsonData = JSON.parse(responseBody);",
+											"        pm.environment.set(\"regUserAtheleteID\", jsonData.data.user_id);",
+											"    });",
+											"",
+											"} else {",
+											"    pm.environment.set(\"accessToken\", null);",
+											"    postman.setNextRequest(null);",
+											"}",
+											"",
+											"pm.test(\"TC0009 -> Set refresh token \", function() {",
+											"        var jsonData = JSON.parse(responseBody);",
+											"        var token = jsonData.data.refresh_jwt_token;",
+											"        pm.environment.set(\"refreshToken\", token);",
+											"    });",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{registeredPlanUser}}\",\n    \"password\":\"{{registeredPlanUserPass}}\",\n    \"promo_code\":\"{{promoCode}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}{{daroanApi}}{{apiV1}}/auth/login",
+									"host": [
+										"{{baseUrl}}{{daroanApi}}{{apiV1}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Device Token Set >> notification/device-token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"oldToken\", \"feDOkHlMSKqKaDFbgOjLBj:APA91bHPGpK08jF8y3BCvD61szOK_SYPgKAgRL3HiV32YlFfkBl1uO-JQkcHlG0CHSpd_iFcNTVLO6oN3n8ViemdMXIhaDGJSsv1prvn9LZENmnm6OApwgIwBaPswARtD_ySdSUpZ1d5\");",
+											"pm.environment.set(\"newToken\", \"feDOkHlMSKqKaDFbgOjLBj:APA91bHPGpK08jF8y3BCvD61szOK_SYPgKAgRL3HiV32YlFfkBl1uO-JQkcHlG0CHSpd_iFcNTVLO6oN3n8ViemdMXIhaDGJSsv1prvn9LZENmnm6OApwgIwBaPswARtD_ySdSUpZ1d5\");",
+											"pm.environment.set(\"tokenType\", \"FCM\")"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+											"});",
+											"",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+											"     pm.response.to.be.ok;",
+											"     pm.response.to.be.withBody;",
+											"     pm.response.to.be.json;",
+											"});",
+											"",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"TC0005 -> Verify message\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data Successfully\");",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_token\": \"{{oldToken}}\",\n    \"new_token\": \"{{newToken}}\",\n    \"token_type\": \"{{tokenType}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}{{coreApi}}{{apiV1}}/notification/device-token",
+									"host": [
+										"{{baseUrl}}{{coreApi}}{{apiV1}}"
+									],
+									"path": [
+										"notification",
+										"device-token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Home Tab",
+					"item": [
+						{
+							"name": "Home Details",
+							"item": [
+								{
+									"name": "Verify user on the home page >> home",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify message\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");",
+													"});",
+													"",
+													"pm.test(\"TC0006 -> Verify Response Data\", function () {",
+													"   pm.expect(jsonData.data.is_ride_record_mode).to.eql(false);",
+													"   pm.expect(jsonData.data.freshness_graph).to.eql(false);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/home",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"home"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Product Video",
+							"item": [
+								{
+									"name": "Verify user able to see the Product Video >> home/product-video",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify Response Data\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");",
+													"    pm.expect(jsonData.data[0].title).to.eql(\"Introduction to Pillar\");",
+													"    pm.expect(jsonData.data[0].video_url).to.eql(\"https://youtu.be/PLs53felZH8\");",
+													"   ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/home/product-video",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"home",
+												"product-video"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Graph",
+							"item": [
+								{
+									"name": "Verify user able to get the overall freshness graph >> home/freshness/overall/graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify message\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\"); ",
+													"});",
+													"",
+													"pm.test(\"TC0006 -> Verify overall freshness score Data\", function () {",
+													"   ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/home/freshness/overall/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"home",
+												"freshness",
+												"overall",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify user able to get the  multi sport freshness graph >> home/freshness/multi-sport/graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify message\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\"); ",
+													"});",
+													"",
+													"pm.test(\"TC0006 -> Verify freshness score Data\", function () {",
+													"   ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/home/freshness/multi-sport/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"home",
+												"freshness",
+												"multi-sport",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify user able to get the energy system graph >> home/freshness/energy-system/graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify message\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\"); ",
+													"});",
+													"",
+													"pm.test(\"TC0006 -> Verify overall freshness score Data\", function () {",
+													"   ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/home/freshness/energy-system/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"home",
+												"freshness",
+												"energy-system",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Training Session",
+							"item": [
+								{
+									"name": "Verify user able to get the today training session >> day/today/training",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify message\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\"); ",
+													"});",
+													"",
+													"pm.test(\"TC0006 -> Verify session Data\", function () {",
+													"    pm.expect(jsonData.data[0].session_metadata.session_status).to.eql(\"PLANNED\")",
+													"    pm.expect(jsonData.data[0].session_metadata.session_label_type).to.eql(\"TRAINING_SESSION\"); ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/day/today/training",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"day",
+												"today",
+												"training"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Alternative Training Suggestions",
+							"item": [
+								{
+									"name": "Verify user able to get suggest session >> session/suggest",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify message\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\"); ",
+													"});",
+													"",
+													"pm.test(\"TC0006 -> Verify suggest session Data\", function () {",
+													"    pm.expect(jsonData.data[0].session_metadata.session_status).to.eql(\"PLANNED\")",
+													"    pm.expect(jsonData.data[0].session_metadata.session_label_type).to.eql(\"TRAINING_SESSION\"); ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"var moment = require('moment');",
+													"pm.environment.set('currentDate', moment().format((\"YYYY-MM-DD\")));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/session/suggest?date={{currentDate}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"session",
+												"suggest"
+											],
+											"query": [
+												{
+													"key": "date",
+													"value": "{{currentDate}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Unit System",
+							"item": [
+								{
+									"name": "Verify user unit system  >> user/unit-system",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+													"});",
+													"",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+													"     pm.response.to.be.ok;",
+													"     pm.response.to.be.withBody;",
+													"     pm.response.to.be.json;",
+													"});",
+													"",
+													"const jsonData = pm.response.json();",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+													"    pm.expect(jsonData.error).to.eql(false);",
+													"});",
+													"",
+													"pm.test(\"TC0005 -> Verify Response Data\", function () {",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");",
+													"    pm.expect(jsonData.data.unit_system).to.eql(\"Metric\"); ",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{coreApi}}{{apiV1}}/user/unit-system",
+											"host": [
+												"{{baseUrl}}{{coreApi}}{{apiV1}}"
+											],
+											"path": [
+												"user",
+												"unit-system"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Event List",
+					"item": [
+						{
+							"name": "Get Event List",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/event/list",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+									],
+									"path": [
+										"event",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "View Anchor List",
+					"item": [
+						{
+							"name": "Verify anchor list",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const anchorSessionList =  [\r",
+											"    {\r",
+											"      \"name\": \"Easy Group Ride\",\r",
+											"      \"code\": \"AN_001\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Moderate Group Ride\",\r",
+											"      \"code\": \"AN_002\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Hard Group Ride\",\r",
+											"      \"code\": \"AN_003\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Road Race\",\r",
+											"      \"code\": \"AN_004\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Time Trial\",\r",
+											"      \"code\": \"AN_005\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Gravel Ride\",\r",
+											"      \"code\": \"AN_011\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Circuit Race\",\r",
+											"      \"code\": \"AN_006\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Cyclo-Cross Race\",\r",
+											"      \"code\": \"AN_007\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Virtual Racing\",\r",
+											"      \"code\": \"AN_008\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Chaingang\",\r",
+											"      \"code\": \"AN_009\"\r",
+											"    },\r",
+											"    {\r",
+											"      \"name\": \"Mountain Bike Ride\",\r",
+											"      \"code\": \"AN_010\"\r",
+											"    }\r",
+											"  ]\r",
+											"\r",
+											"  pm.environment.set(\"anchorSessions\", JSON.stringify(anchorSessionList));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});\r",
+											"pm.test(\"TC0006 -> Set all anchor session info\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    let anchorList_length = jsonData.data.length;\r",
+											"    for(let i = 1; i <= anchorList_length; i++){\r",
+											"        pm.environment.set(\"anchorSessionList_\"+[i]+\"_Name\", jsonData.data[i-1].name);\r",
+											"        pm.environment.set(\"anchorSessionList_\"+[i]+\"_Code\", jsonData.data[i-1].code);\r",
+											"        }\r",
+											"    });"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/session/anchor/list",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+									],
+									"path": [
+										"session",
+										"anchor",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Plan Details",
+					"item": [
+						{
+							"name": "Verify that, user can view plan details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV2}}/plan/details?type={{type}}&code={{code}}",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV2}}"
+									],
+									"path": [
+										"plan",
+										"details"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "{{type}}"
+										},
+										{
+											"key": "code",
+											"value": "{{code}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify that, user can view plan insight graph",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/event/estimated/insight/graph?goal_type={{type}}&goal_code={{code}}",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+									],
+									"path": [
+										"event",
+										"estimated",
+										"insight",
+										"graph"
+									],
+									"query": [
+										{
+											"key": "goal_type",
+											"value": "{{type}}"
+										},
+										{
+											"key": "goal_code",
+											"value": "{{code}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify that, user able to view plan progress summary",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/progress/summary",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+									],
+									"path": [
+										"plan",
+										"progress",
+										"summary"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify that, user able to view plan progress graph",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/progress/graph",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+									],
+									"path": [
+										"plan",
+										"progress",
+										"graph"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Calendar Tab",
+					"item": [
+						{
+							"name": "Month View",
+							"item": [
+								{
+									"name": "Verify that user view month data",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													"pm.test(\"TC0006 -> Verify calendar data\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(pm.response.text()).to.include(\"zone_focus\");\r",
+													"    \r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const moment = require('moment');\r",
+													"let getCurrentMonth = moment().month()+ 1;\r",
+													"let getCurrentYear = moment().year();\r",
+													"pm.environment.set(\"currentMonth\", getCurrentMonth);\r",
+													"pm.environment.set(\"currentYear\", getCurrentYear);\r",
+													"const week_focus = [\r",
+													"            1,\r",
+													"            1,\r",
+													"            2,\r",
+													"            2,\r",
+													"            0\r",
+													"        ];\r",
+													"pm.environment.set(\"weekFocus\", JSON.stringify(week_focus));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/calendar/month-view/{{currentYear}}/{{currentMonth}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"plan",
+												"calendar",
+												"month-view",
+												"{{currentYear}}",
+												"{{currentMonth}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify that user view week info",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/calendar/month-view/{{currentYear}}/{{currentMonth}}/week-info",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"plan",
+												"calendar",
+												"month-view",
+												"{{currentYear}}",
+												"{{currentMonth}}",
+												"week-info"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Block View",
+							"item": [
+								{
+									"name": "Verify that user view week info Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													"pm.test(\"TC0006 -> Verify block data\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(pm.response.text()).to.include(\"zone_focus\")\r",
+													"    pm.expect(jsonData.data.week_details[0].status).to.be.oneOf([\"COMPLETE\",\"INCOMPLETE\", \"INPROGRESS\"]);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"var moment = require('moment');\r",
+													"pm.environment.set('currentDate', moment().format((\"YYYY-MM-DD\")));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/calendar/block-view/block-info?date={{currentDate}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"plan",
+												"calendar",
+												"block-view",
+												"block-info"
+											],
+											"query": [
+												{
+													"key": "date",
+													"value": "{{currentDate}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Year View",
+							"item": [
+								{
+									"name": "Verify year view >> training timeline",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/calendar/year-view/training-timeline",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"plan",
+												"calendar",
+												"year-view",
+												"training-timeline"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "WAR Analysis",
+							"item": [
+								{
+									"name": "Verify war analysis",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const moment = require('moment');\r",
+													"pm.environment.set(\"currentWeekMonday\", moment().startOf('isoWeek').format(\"YYYY-MM-DD\"));\r",
+													"pm.environment.set(\"weekAnalysisID\", \"bc394773-2868-47f9-9008-d37c74519e19\");\r",
+													"pm.environment.set(\"startDateOfWAR\", \"2024-01-22\");\r",
+													"pm.environment.set(\"endDateOfWAR\", \"2024-01-28\");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													"pm.test(\"TC0006 -> Verify calendar data\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(pm.response.text()).to.include(\"zone_focus\");\r",
+													"    pm.expect(jsonData.data.start_date).to.eql(pm.environment.get(\"startDateOfWAR\"));\r",
+													"    pm.expect(jsonData.data.end_date).to.eql(pm.environment.get(\"endDateOfWAR\"));\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/week/analysis?id={{weekAnalysisID}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"week",
+												"analysis"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{weekAnalysisID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify next week report",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													"pm.test(\"TC0006 -> Verify calendar data\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(pm.response.text()).to.include(\"zone_focus\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/week/analysis/next-week-report?code={{weekAnalysisID}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"week",
+												"analysis",
+												"next-week-report"
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "{{weekAnalysisID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify edit training week",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													"pm.test(\"TC0006 -> Verify calendar data\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(pm.response.text()).to.include(\"zone_focus\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/week/edit?week_start_date={{currentWeekMonday}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"week",
+												"edit"
+											],
+											"query": [
+												{
+													"key": "week_start_date",
+													"value": "{{currentWeekMonday}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Progress Tab",
+					"item": [
+						{
+							"name": "General View",
+							"item": [
+								{
+									"name": "Verify progress >> general stats graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/general/stats/graph?year={{currentYear}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"general",
+												"stats",
+												"graph"
+											],
+											"query": [
+												{
+													"key": "year",
+													"value": "{{currentYear}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify progress >> general power curve graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/general/power-curve/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"general",
+												"power-curve",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify progress >> general difficulty level curve graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/general/difficulty-level/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"general",
+												"difficulty-level",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Progress-Timeline",
+							"item": [
+								{
+									"name": "Verify Session accuracy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const moment = require('moment');\r",
+													"let getCurrentYear = moment().year();\r",
+													"pm.environment.set(\"currentYear\", getCurrentYear);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/progress/session-accuracy/graph?year={{currentYear}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"progress",
+												"session-accuracy",
+												"graph"
+											],
+											"query": [
+												{
+													"key": "year",
+													"value": "{{currentYear}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify progress duration graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/progress/duration/graph?year={{currentYear}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"progress",
+												"duration",
+												"graph"
+											],
+											"query": [
+												{
+													"key": "year",
+													"value": "{{currentYear}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify progress time in zone graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/progress/time-in-zone/graph?year={{currentYear}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"progress",
+												"time-in-zone",
+												"graph"
+											],
+											"query": [
+												{
+													"key": "year",
+													"value": "{{currentYear}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Fitness View",
+							"item": [
+								{
+									"name": "Verify progress>>fitness overall progress",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Successfully returned fitness overall progress graph data\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV2}}/evaluation/fitness/overall-progress",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV2}}"
+											],
+											"path": [
+												"evaluation",
+												"fitness",
+												"overall-progress"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify progress>>fitness power curve graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/fitness/power-curve/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"fitness",
+												"power-curve",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Verify progress>>fitness progress summary",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Successfully returned fitness progress summary\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/fitness/progress/summary?fitness_type=threshold",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"fitness",
+												"progress",
+												"summary"
+											],
+											"query": [
+												{
+													"key": "fitness_type",
+													"value": "threshold"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Health View",
+							"item": [
+								{
+									"name": "health multi sport graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Successfully returned health multi sport freshness graph\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/health/freshness/multi-sport/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"health",
+												"freshness",
+												"multi-sport",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "health multi sport graph Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Successfully returned health energy system freshness graph\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/health/freshness/energy-system/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"health",
+												"freshness",
+												"energy-system",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "health overall graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(10000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Successfully returned health overall freshness graph\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/health/freshness/overall/graph?year={{currentYear}}",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"health",
+												"freshness",
+												"overall",
+												"graph"
+											],
+											"query": [
+												{
+													"key": "year",
+													"value": "{{currentYear}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "health weight graph",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/evaluation/health/weight/graph",
+											"host": [
+												"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+											],
+											"path": [
+												"evaluation",
+												"health",
+												"weight",
+												"graph"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Completed Event",
+					"item": [
+						{
+							"name": "Verify that, user view completed event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+											"     pm.response.to.be.ok;\r",
+											"     pm.response.to.be.withBody;\r",
+											"     pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.error).to.eql(false);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"TC0005 -> Verify message\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{trainerApi}}{{apiV1}}/plan/completion",
+									"host": [
+										"{{baseUrl}}{{trainerApi}}{{apiV1}}"
+									],
+									"path": [
+										"plan",
+										"completion"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Basic Info",
+							"item": [
+								{
+									"name": "Verify basic info",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{coreApi}}{{apiV1}}/user/basic-info",
+											"host": [
+												"{{baseUrl}}{{coreApi}}{{apiV1}}"
+											],
+											"path": [
+												"user",
+												"basic-info"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Profile Image",
+							"item": [
+								{
+									"name": "Verify profile picture",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{coreApi}}{{apiV1}}/user/profile/picture",
+											"host": [
+												"{{baseUrl}}{{coreApi}}{{apiV1}}"
+											],
+											"path": [
+												"user",
+												"profile",
+												"picture"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Time-zone info",
+							"item": [
+								{
+									"name": "Verify time zone info",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"TC0001 -> Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {\r",
+													"     pm.response.to.be.ok;\r",
+													"     pm.response.to.be.withBody;\r",
+													"     pm.response.to.be.json;\r",
+													"});\r",
+													"\r",
+													"const jsonData = pm.response.json();\r",
+													"pm.test(\"TC0004 -> Verify error does not found\", function () {\r",
+													"    pm.expect(jsonData.error).to.eql(false);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"TC0005 -> Verify message\", function () {\r",
+													"    pm.expect(jsonData.message).to.eql(\"Returned data successfully\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}{{coreApi}}{{apiV1}}/user/timezone-info",
+											"host": [
+												"{{baseUrl}}{{coreApi}}{{apiV1}}"
+											],
+											"path": [
+												"user",
+												"timezone-info"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Notification",
+					"item": [
+						{
+							"name": "Verify user see the in app notification >> notification/panel",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC0001 -> Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"TC0002 -> Response time is less than 5000ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+											"});",
+											"",
+											"pm.test(\"TC0003 -> Response must be valid and have a body\", function () {",
+											"     pm.response.to.be.ok;",
+											"     pm.response.to.be.withBody;",
+											"     pm.response.to.be.json;",
+											"});",
+											"",
+											"const jsonData = pm.response.json();",
+											"pm.test(\"TC0004 -> Verify error does not found\", function () {",
+											"    pm.expect(jsonData.error).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"TC0005 -> Verify message\", function () {",
+											"    pm.expect(jsonData.message).to.eql(\"Returned data Successfully\"); ",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}{{coreApi}}{{apiV1}}/notification/panel",
+									"host": [
+										"{{baseUrl}}{{coreApi}}{{apiV1}}"
+									],
+									"path": [
+										"notification",
+										"panel"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://postman-echo.com",
+			"disabled": true
+		}
+	]
+}

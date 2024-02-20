@@ -1,0 +1,297 @@
+{
+	"id": "58e0b28d-ad9c-41b1-b11e-51d16b34e854",
+	"name": "Regression -Pillar-STG-ENV",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "https://stg-api-gw.pillar-app.com/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "trainerApi",
+			"value": "trainer/private/api/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "daroanApi",
+			"value": "daroan/public/api/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "coreApi",
+			"value": "core/private/api/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "apiV1",
+			"value": "v1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "apiV2",
+			"value": "v2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "oldToken",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "newToken",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "registeredPlanUser",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "registeredPlanUserPass",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "regUserAtheleteID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "promoCode",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "tokenType",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "currentDate",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "currentYear",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "currentMonth",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "weekFocus",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "type",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "code",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "weekAnalysisID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "currentWeekMonday",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "startDateOfWAR",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "endDateOfWAR",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessions",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_1_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_1_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_2_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_2_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_3_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_3_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_4_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_4_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_5_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_5_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_6_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_6_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_7_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_7_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_8_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_8_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_9_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_9_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_10_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_10_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_11_Name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "anchorSessionList_11_Code",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2024-01-29T14:15:44.089Z",
+	"_postman_exported_using": "Postman/10.22.6"
+}
